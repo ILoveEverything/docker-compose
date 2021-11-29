@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    command: redis-server /etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/conf/redis.conf:/etc/redis/redis.conf
+      - ./docker/redis/data:/data
+    networks: ["network"]
+
+  etcd:
+    image: quay.io/coreos/etcd:latest
+    container_name: etcd
+    environment:
+      - ETCD_NAME=etcd
+      - ETCD_DATA_DIR=/data
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_INITIAL_CLUSTER=etcd=http://0.0.0.0:2380
+    ports:
+      - 2379:2379
+      - 2380:2380
+    command: etcd
+    volumes:
+      - ./docker/etcd/data:/data
+    networks: ["network"]
+
+  nats:
+    image: nats:latest
+    container_name: nats
+    volumes:
+      - ./docker/nats/data:/data
+    command: --store_dir /data
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+    networks: ["network"]
+
+networks:
+  network:
+    name: network
