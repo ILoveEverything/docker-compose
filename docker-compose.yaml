@@ -1,5 +1,18 @@
 version: '3.9'
 services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mariadb/conf:/etc/mysql/
+      - ./docker/mariadb/data:/var/lib/mysql
+      - ./docker/mariadb/log:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    networks: ["network"]
+
   redis:
     image: redis:latest
     container_name: redis
