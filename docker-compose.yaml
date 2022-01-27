@@ -50,7 +50,7 @@ services:
     container_name: nats
     volumes:
       - ./docker/nats/data:/data
-    command: --store_dir /data
+    command: --store_dir /data -js
     ports:
       - "4222:4222"
       - "6222:6222"
