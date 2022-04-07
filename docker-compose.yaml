@@ -2,11 +2,12 @@ version: '3.9'
 services:
   watchtower:
     image: containrrr/watchtower
+    container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /root/.docker/config.json:/config.json
     command: --interval 30
-    networks: ["network"]
+    networks: [ "network" ]
 
   mariadb:
     image: mariadb:latest
@@ -19,7 +20,7 @@ services:
       - ./docker/mariadb/log:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-    networks: ["network"]
+    networks: [ "network" ]
 
   redis:
     image: redis:latest
@@ -30,7 +31,7 @@ services:
     volumes:
       - ./docker/redis/conf/redis.conf:/etc/redis/redis.conf
       - ./docker/redis/data:/data
-    networks: ["network"]
+    networks: [ "network" ]
 
   etcd:
     image: quay.io/coreos/etcd:latest
@@ -51,7 +52,7 @@ services:
     command: etcd
     volumes:
       - ./docker/etcd/data:/data
-    networks: ["network"]
+    networks: [ "network" ]
 
   nats:
     image: nats:latest
@@ -63,7 +64,7 @@ services:
       - "4222:4222"
       - "6222:6222"
       - "8222:8222"
-    networks: ["network"]
+    networks: [ "network" ]
 
 networks:
   network:
