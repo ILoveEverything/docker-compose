@@ -9,18 +9,42 @@ services:
     command: --interval 30
     networks: [ "network" ]
 
-  mariadb:
-    image: mariadb:latest
+  # mariadb:
+  #  image: mariadb:latest
+  #  container_name: mariadb
+  #  ports:
+  #    - "3306:3306"
+  #  volumes:
+  #    - ./docker/mariadb/conf:/etc/mysql/
+  #    - ./docker/mariadb/data:/var/lib/mysql
+  #    - ./docker/mariadb/log:/var/log/mysql
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: mysql
+  #  networks: [ "network" ]
+
+  mysql:
+    image: mysql:latest
     container_name: mysql
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./docker/mariadb/conf:/etc/mysql/
-      - ./docker/mariadb/data:/var/lib/mysql
-      - ./docker/mariadb/log:/var/log/mysql
+    restart: always
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
     environment:
       MYSQL_ROOT_PASSWORD: mysql
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
     networks: [ "network" ]
+    ports:
+      - 3306:3306
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 3306:3306
+  #   networks: [ "network" ]
 
   redis:
     image: redis:latest
